@@ -1,68 +1,72 @@
-persons_cities = {}
-persons_regions = {}
-person_hobbies = {}
-person_phone_number = {}
+import mysql.connector
 
+# Connect to the MySQL database
+db = mysql.connector.connect(
+    host="localhost",
+    port=3307,  # Use port 3307 if MySQL is running on this port
+    user="raz",
+    password="123456",
+    database="DMD_users"
+)
+
+cursor = db.cursor()
+
+# Define the Person class with database integration
 class Person:
     def __init__(self, firstname: str, lastname: str, ID: int, phone_number: str, full_address: str, gender: str):
         self.firstname = firstname
         self.lastname = lastname
-        self.name = f'{self.firstname} {self.lastname}' 
+        self.name = f'{self.firstname} {self.lastname}'
         self.gender = gender
         self.phone_number = phone_number
         self.full_address = full_address
         self.ID = ID
         self.city = full_address.split()[-1]
         self.hobbies = {}
+        
+        self.region = self.determine_region(self.city)
+        self.save_to_db()
+    
+    def determine_region(self, city: str) -> str:
+        northern_district = ["Safed", "Tiberias", "Nazareth", "Nof HaGalil", "Acre", "Karmiel", "Nahariya",
+                             "Migdal HaEmek", "Ma'alot-Tarshiha", "Shfar'am", "Sakhnin", "Kiryat Shmona",
+                             "Yokneam Illit", "Kiryat Ata", "Kiryat Bialik", "Kiryat Yam", "Tamra"]
+        haifa_district = ["Haifa", "Hadera", "Or Akiva", "Nesher", "Tirat Carmel", "Baqa al-Gharbiyye",
+                          "Umm al-Fahm", "Zikhron Ya'akov", "Pardes Hanna-Karkur"]
+        central_district = ["Petah Tikva", "Netanya", "Raanana", "Herzliya", "Kfar Saba", "Hod HaSharon",
+                            "Rosh HaAyin", "Tira", "Ramat HaSharon", "Bat Yam", "Holon", "Rishon LeZion",
+                            "Givatayim", "Or Yehuda", "Yavne", "Lod", "Ramla", "Modiin-Maccabim-Reut",
+                            "Kiryat Ono", "Yehud-Monosson"]
+        tel_aviv_district = ["Tel Aviv-Yafo", "Bnei Brak", "Ramat Gan", "Givatayim", "Bat Yam", "Holon"]
+        jerusalem_district = ["Jerusalem", "Beit Shemesh", "Ma'ale Adumim", "Modi'in Illit"]
+        southern_district = ["Beersheba", "Ashdod", "Ashkelon", "Eilat", "Dimona", "Kiryat Gat",
+                             "Netivot", "Ofakim", "Sderot", "Arad", "Rahat"]
+        judea_samaria_area = ["Modi'in Illit", "Ariel", "Ma'ale Adumim", "Beitar Illit", "Kiryat Arba", "Giv'at Ze'ev"]
+        
+        if city in northern_district:
+            return 'northern_district'
+        elif city in haifa_district:
+            return 'haifa_district'
+        elif city in central_district:
+            return 'central_district'
+        elif city in tel_aviv_district:
+            return 'tel_aviv_district'
+        elif city in jerusalem_district:
+            return 'jerusalem_district'
+        elif city in southern_district:
+            return 'southern_district'
+        elif city in judea_samaria_area:
+            return 'judea_samaria_area'
+        else:
+            return 'unknown'
 
-        northern_district = (
-            "Safed", "Tiberias", "Nazareth", "Nof HaGalil", "Acre", "Karmiel", "Nahariya",
-            "Migdal HaEmek", "Ma'alot-Tarshiha", "Shfar'am", "Sakhnin", "Kiryat Shmona",
-            "Yokneam Illit", "Kiryat Ata", "Kiryat Bialik", "Kiryat Yam", "Tamra"
+    def save_to_db(self):
+        cursor.execute(
+            "INSERT INTO users (firstname, lastname, full_name, gender, phone_number, full_address, city, region) "
+            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+            (self.firstname, self.lastname, self.name, self.gender, self.phone_number, self.full_address, self.city, self.region)
         )
-        haifa_district = (
-            "Haifa", "Hadera", "Or Akiva", "Nesher", "Tirat Carmel", "Baqa al-Gharbiyye",
-            "Umm al-Fahm", "Zikhron Ya'akov", "Pardes Hanna-Karkur"
-        )
-        central_district = (
-            "Petah Tikva", "Netanya", "Raanana", "Herzliya", "Kfar Saba", "Hod HaSharon",
-            "Rosh HaAyin", "Tira", "Ramat HaSharon", "Bat Yam", "Holon", "Rishon LeZion",
-            "Givatayim", "Or Yehuda", "Yavne", "Lod", "Ramla", "Modiin-Maccabim-Reut",
-            "Kiryat Ono", "Yehud-Monosson"
-        )
-        tel_aviv_district = (
-            "Tel Aviv-Yafo", "Bnei Brak", "Ramat Gan", "Givatayim", "Bat Yam", "Holon"
-        )
-        jerusalem_district = (
-            "Jerusalem", "Beit Shemesh", "Ma'ale Adumim", "Modi'in Illit"
-        )
-        southern_district = (
-            "Beersheba", "Ashdod", "Ashkelon", "Eilat", "Dimona", "Kiryat Gat",
-            "Netivot", "Ofakim", "Sderot", "Arad", "Rahat"
-        )
-        judea_samaria_area = (
-            "Modi'in Illit", "Ariel", "Ma'ale Adumim", "Beitar Illit", "Kiryat Arba", "Giv'at Ze'ev"
-        )
-
-        self.region = ''
-        if self.city in northern_district:
-            self.region = 'northern_district'
-        elif self.city in haifa_district:
-            self.region = 'haifa_district'
-        elif self.city in central_district:
-            self.region = 'central_district'
-        elif self.city in tel_aviv_district:
-            self.region = 'tel_aviv_district'
-        elif self.city in jerusalem_district:
-            self.region = 'jerusalem_district'
-        elif self.city in southern_district:
-            self.region = 'southern_district'
-        elif self.city in judea_samaria_area:
-            self.region = 'judea_samaria_area'
-
-        persons_cities.setdefault(self.city, []).append(self.name)
-        person_phone_number[self.name] = self.phone_number
-        persons_regions.setdefault(self.region, []).append(self.name)
+        db.commit()
 
     def add_hobby(self, hobby: str, rating: str):
         if ' ' in hobby:
@@ -88,7 +92,7 @@ class Person:
             for hobby in self.hobbies:
                 if hobby in person_hobbies:
                     for p in person_hobbies[hobby]:
-                        if p != self.name and p in self.nearby_people and p not in self.matching_people:
+                        if p != self.name and p in self.nearby_people:
                             self.matching_people.append(p)
             if self.matching_people:
                 return f'{", ".join(self.matching_people)} are your matches. You can now contact them!'
@@ -123,19 +127,4 @@ class Female(Person):
         super().__init__(firstname, lastname, ID, phone_number, full_address, gender='female')
 
     def info(self):
-        return f'Here is all the information we know about you:\nYour name is {self.firstname} {self.lastname}, You are living at {self.full_address},\nYour phone number is {self.phone_number}.\nYour hobbies are {self.hobbies}'
-
-
-
-raz = Male('Raz', 'Asraf', 323838110, '0545973537', 'Rabinovich Yehoshua 55 Holon')
-anatoly = Male('Anatoly', 'Kirilenko', 11252234, '0544442232', 'Bnei Brak 2 Ashdod')
-adi = Female('Adi', 'Hadad', 213485881, '0544530109', 'Uri Tzvi Grinberg 23 Holon')
-roee = Male('Roee', 'Hadad', 112354513, '0546382085', 'Uri Tzvi Grinberg 23 Holon')
-
-adi.add_hobby('Elint Skydiving Riding Skiing', '6 9 4 4')
-roee.add_hobby('Gaming Riding', '6 8')
-
-raz.add_hobby('Skiing Riding Surfing', '5 4 6')
-print(raz.add_hobby('Gaming Running', '10 7'))
-print(raz.matchmaking())
-print(raz.contact_matches())
+        return f'Here is all the information we know about you:\nYour name is {self.firstname} {self.lastname}, You are living at {self.full_address},\nYour phone number is {self.phone_number}.\nYour hobbies are'
