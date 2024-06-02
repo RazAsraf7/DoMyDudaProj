@@ -23,42 +23,25 @@ class Person:
         self.ID = ID
         self.city = full_address.split()[-1]
         self.hobbies = {}
-        
+
         self.region = self.determine_region(self.city)
         self.save_to_db()
-    
+
     def determine_region(self, city: str) -> str:
-        northern_district = ["Safed", "Tiberias", "Nazareth", "Nof HaGalil", "Acre", "Karmiel", "Nahariya",
-                             "Migdal HaEmek", "Ma'alot-Tarshiha", "Shfar'am", "Sakhnin", "Kiryat Shmona",
-                             "Yokneam Illit", "Kiryat Ata", "Kiryat Bialik", "Kiryat Yam", "Tamra"]
-        haifa_district = ["Haifa", "Hadera", "Or Akiva", "Nesher", "Tirat Carmel", "Baqa al-Gharbiyye",
-                          "Umm al-Fahm", "Zikhron Ya'akov", "Pardes Hanna-Karkur"]
-        central_district = ["Petah Tikva", "Netanya", "Raanana", "Herzliya", "Kfar Saba", "Hod HaSharon",
-                            "Rosh HaAyin", "Tira", "Ramat HaSharon", "Bat Yam", "Holon", "Rishon LeZion",
-                            "Givatayim", "Or Yehuda", "Yavne", "Lod", "Ramla", "Modiin-Maccabim-Reut",
-                            "Kiryat Ono", "Yehud-Monosson"]
-        tel_aviv_district = ["Tel Aviv-Yafo", "Bnei Brak", "Ramat Gan", "Givatayim", "Bat Yam", "Holon"]
-        jerusalem_district = ["Jerusalem", "Beit Shemesh", "Ma'ale Adumim", "Modi'in Illit"]
-        southern_district = ["Beersheba", "Ashdod", "Ashkelon", "Eilat", "Dimona", "Kiryat Gat",
-                             "Netivot", "Ofakim", "Sderot", "Arad", "Rahat"]
-        judea_samaria_area = ["Modi'in Illit", "Ariel", "Ma'ale Adumim", "Beitar Illit", "Kiryat Arba", "Giv'at Ze'ev"]
-        
-        if city in northern_district:
-            return 'northern_district'
-        elif city in haifa_district:
-            return 'haifa_district'
-        elif city in central_district:
-            return 'central_district'
-        elif city in tel_aviv_district:
-            return 'tel_aviv_district'
-        elif city in jerusalem_district:
-            return 'jerusalem_district'
-        elif city in southern_district:
-            return 'southern_district'
-        elif city in judea_samaria_area:
-            return 'judea_samaria_area'
-        else:
-            return 'unknown'
+        districts_cities = {
+            'Jerusalem District': ['Jerusalem', 'Mevaseret Zion'],
+            'Tel Aviv District': ['Tel Aviv', 'Holon', 'Bnei Brak', 'Bat Yam', 'Herzliya', 'Ramat Gan', 'Giv''atayim', 'Or Yehuda', 'Ramat HaSharon'],
+            'Haifa District': ['Haifa', 'Kiryat Ata', 'Kiryat Bialik', 'Kiryat Motzkin', 'Nesher', 'Tira', 'Kiryat Yam', 'Kiryat Gat'],
+            'Central District': ['Rishon LeZion', 'Petah Tikva', 'Netanya', 'Rehovot', 'Kfar Saba', 'Modiin-Maccabim-Reut', 'Ra''anana', 'Be''er Ya''akov', 'Hod HaSharon', 'Giv''at Shmuel', 'Rosh HaAyin', 'Yavne', 'Qalansawe', 'Nazareth Illit', 'Yehud-Monosson', 'Tzfat'],
+            'Southern District': ['Ashdod', 'Beer Sheva', 'Ashkelon', 'Dimona', 'Sderot', 'Kiryat Malakhi', 'Eilat', 'Ofakim', 'Yeruham', 'Netivot'],
+            'Northern District': ['Nahariya', 'Ra''at', 'Karmiel', 'Afula', 'Nof Hagalil', 'Umm al-Fahm', 'Beit She''an', 'Nazareth Illit', 'Sakhnin', 'Kiryat Shmona', 'Tiberias', 'Tzfat', 'Dimona']
+        }
+
+        for district_name, cities in districts_cities.items():
+            if city in cities:
+                return district_name
+
+        return 'unknown'
 
     def save_to_db(self):
         cursor.execute(
@@ -68,21 +51,14 @@ class Person:
         )
         db.commit()
 
-    def add_hobby(self, hobby: str, rating: str):
-        if ' ' in hobby:
-            splitted_hobbies = hobby.split()
-            splitted_ratings = rating.split()
-            if len(splitted_hobbies) != len(splitted_ratings):
-                return f'There are missing arguments because {len(splitted_hobbies)} hobbies don\'t match {len(splitted_ratings)} ratings.'
-            else:
-                for i in range(len(splitted_hobbies)):
-                    self.hobbies[splitted_hobbies[i]] = int(splitted_ratings[i])
-                    person_hobbies.setdefault(splitted_hobbies[i], []).append(self.name)
-                return f'{" and ".join(splitted_hobbies)} have been successfully added.'
-        else:
-            self.hobbies[hobby] = int(rating)
-            person_hobbies.setdefault(hobby, []).append(self.name)
-            return f'{hobby} has been successfully added.'
+    def add_hobby(self, hobby: str, rating: int):
+        self.hobbies[hobby] = rating
+        person_hobbies.setdefault(hobby, []).append(self.name)
+        self.sort_hobbies()
+
+    def sort_hobbies(self):
+        sorted_hobbies = sorted(self.hobbies.items(), key=lambda item: item[1])
+        self.hobbies = dict(sorted_hobbies)
 
     def matchmaking(self):
         self.nearby_people = [p for p in persons_cities.get(self.city, []) if p != self.name]
@@ -106,25 +82,32 @@ class Person:
                                 self.matching_people.append(p)
                 if self.matching_people:
                     return f'{", ".join(self.matching_people)} are your regional matches. You can now contact them!'
-            return f'Unfortunately, no matches were found in {self.city} or {self.region}.'
+            print(f'Unfortunately, no matches were found in {self.city} or {self.region}.')
+            all_country_search = input('Would you like to search for people in farther places?')
+            if 'n' in all_country_search.lower():
+                return 'Understood. Maybe next time!'
+            else:
+                for hobby in person_hobbies.keys():
+                    if hobby == self.hobbies.keys():
+                        print("There might be someone in your country who shares the same hobbies!")
+                        for person in person_hobbies[hobby]:
+                            if person != self.name and person not in self.matching_people:
+                                self.matching_people.append(person)
+                                return f'{person} is a match for you!'
+            if len(self.matching_people) == 0:
+                return 'Unfortunately, we couldn\'t find anyone with the same hobbies as you.'
 
     def contact_matches(self):
         if self.matching_people:
-            contact_info = [f'{matcher}\'s phone number is: {person_phone_number[matcher]}' for matcher in self.matching_people]
+            contact_info = [f'{matcher}\'s phone number is: 0{person_phone_number[matcher]}' for matcher in
+                            self.matching_people]
             return '\n'.join(contact_info)
         else:
             return 'Unfortunately, there are no matches.'
 
-class Male(Person):
-    def __init__(self, firstname: str, lastname: str, ID: int, phone_number: str, full_address: str):
-        super().__init__(firstname, lastname, ID, phone_number, full_address, gender='male')
-
     def info(self):
-        return f'Here is all the information we know about you:\nYour name is {self.firstname} {self.lastname}, You are living at {self.full_address},\nYour phone number is {self.phone_number}.\nYour hobbies are {self.hobbies}'
+        return f'Here is all the information we know about you:\nYour name is {self.firstname} {self.lastname}, You are living at {self.full_address},\nYour phone number is {self.phone_number}'
 
-class Female(Person):
-    def __init__(self, firstname: str, lastname: str, ID: int, phone_number: str, full_address: str):
-        super().__init__(firstname, lastname, ID, phone_number, full_address, gender='female')
 
-    def info(self):
-        return f'Here is all the information we know about you:\nYour name is {self.firstname} {self.lastname}, You are living at {self.full_address},\nYour phone number is {self.phone_number}.\nYour hobbies are'
+raz = Person('Raz','Asraf',323838110,'0545973537','Rabinovich Yehoshua 55 Holon', 'Male')
+    
