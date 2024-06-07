@@ -1,0 +1,62 @@
+[
+    {
+        "firstname": "Lior",
+        "lastname": "Cohen",
+        "gender": "Male",
+        "phone_number": 523456789,
+        "full_address": "Herzl 10, Tel Aviv",
+        "hobbies": {},
+        "city": "Tel Aviv",
+        "region": "Tel Aviv District"
+    },
+    {
+        "firstname": "Neta",
+        "lastname": "Levi",
+        "gender": "Female",
+        "phone_number": 547896321,
+        "full_address": "Ben Gurion 5, Haifa",
+        "hobbies": {},
+        "city": "Haifa",
+        "region": "Haifa District"
+    },
+    {
+        "firstname": "Shira",
+        "lastname": "Mizrahi",
+        "gender": "Female",
+        "phone_number": 532145678,
+        "full_address": "Dizengoff 30, Tel Aviv",
+        "hobbies": {},
+        "city": "Tel Aviv",
+        "region": "Tel Aviv District"
+    },
+    {
+        "firstname": "Yossi",
+        "lastname": "Bar",
+        "gender": "Male",
+        "phone_number": 545678912,
+        "full_address": "Jerusalem Blvd 20, Tel Aviv-Yafo",
+        "hobbies": {},
+        "city": "Tel Aviv-Yafo",
+        "region": "Tel Aviv District"
+    },
+    {
+        "firstname": "Maya",
+        "lastname": "Ronen",
+        "gender": "Female",
+        "phone_number": 548765432,
+        "full_address": "Bialik 15, Ramat Gan",
+        "hobbies": {},
+        "city": "Ramat Gan",
+        "region": "Tel Aviv District"
+    },
+    {
+        "firstname": "Shusha",
+        "lastname": "Hadad",
+        "gender": "Female Dog",
+        "phone_number": "053695733",
+        "full_address": "Uri Tzvi Grinberg 23, Holon",
+        "hobbies": {},
+        "city": "Holon",
+        "region": "Tel Aviv District"
+    }
+]
