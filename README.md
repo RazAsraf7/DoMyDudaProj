@@ -1,24 +1,107 @@
-<head><h1>Do My Duda Application</h1></head>
-<hr>
-<body>
-  <h2>This is the main Python application that is hosting the DoMyDuda web app</h2>
-  <h3>The DoMyDuda application is about conneting to other people via habits. This project was made as the final project of the DevOps course I took at 2024.<br>The main idea of this project was to implement this web application with Docker and run it with Kubernetes (you can find this in <a href "https://github.com/RazAsraf7/FastAPI-App">FastAPI-App Repository</a></h3>
-  <h4>In this project I used:</h4>
-  <ul>
-    <li>Docker</li>
-    <li>Kubernetes</li>
-    <li>Helm</li>
-    <li>Jenkins</li>
-    <li>ArgoCD</li>
-    <li>Python</li>
-    <li>FastAPI</li>
-    <li>Uvicorn (Python Library)</li>
-    <li>HTML</li>
-    <li>CSS</li>
-    <li>Git</li>
-    <li>GitHub</li>
-    <li>MongoDB</li>
-  </ul>
-  <p>The main intention of this project was to make a web application in Python with it's own database that will be implemented with Docker image and building pods in Kubernetes to support the server running without crashes.</p>
-  <p>You are welcome to run this project on your own machine and see the progress that was made!</p>
-</body>
+# DoMyDuda – Backend Service
+
+## Overview
+
+DoMyDuda is a backend service designed to manage application data through a REST API.
+The project demonstrates building a modern backend system using Python with containerized deployment and database integration.
+
+This project focuses on backend architecture, API design, and containerized environments.
+
+---
+
+## Tech Stack
+
+* Python
+* FastAPI
+* MongoDB
+* Docker
+* REST API
+
+---
+
+## Features
+
+* RESTful API for managing application data
+* Health check endpoint for service monitoring
+* Database persistence using MongoDB
+* Containerized deployment using Docker
+
+---
+
+## Architecture
+
+Client Application
+↓
+FastAPI Backend
+↓
+MongoDB Database
+
+---
+
+## Project Structure
+
+```
+DoMyDudaProj
+│
+├── app
+│   ├── routes
+│   ├── models
+│   ├── services
+│   └── main.py
+│
+├── Dockerfile
+├── requirements.txt
+└── README.md
+```
+
+---
+
+## Running the Project
+
+### Clone the repository
+
+```bash
+git clone https://github.com/RazAsraf7/DoMyDudaProj
+cd DoMyDudaProj
+```
+
+### Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### Run the application
+
+```bash
+uvicorn app.main:app --reload
+```
+
+### Run with Docker
+
+```bash
+docker build -t domyduda .
+docker run -p 8000:8000 domyduda
+```
+
+---
+
+## Example Endpoint
+
+Health check:
+
+```
+GET /health
+```
+
+Response:
+
+```
+OK
+```
+
+---
+
+## Purpose
+
+This project was created as part of a personal effort to deepen backend development knowledge and explore API design with Python.
