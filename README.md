@@ -1,107 +1,30 @@
-# DoMyDuda – Backend Service
+# DoMyDuda - Local Hobby Matchmaking 🤝
 
-## Overview
+![Python](https://img.shields.io/badge/Python-3.x-blue.svg)
+![License](https://img.shields.io/badge/License-MIT-green.svg)
 
-DoMyDuda is a backend service designed to manage application data through a REST API.
-The project demonstrates building a modern backend system using Python with containerized deployment and database integration.
+**DoMyDuda** is a Python-based Object-Oriented matchmaking system designed to connect people based on shared hobbies and geographical proximity within Israel. 
 
-This project focuses on backend architecture, API design, and containerized environments.
+The system maps users to specific districts based on their city and prioritizes matching them with local hobbyists first. If no local matches are found, it expands the search to the broader regional district.
 
----
+## 🌟 Features
+* **Location-Based Matching:** Automatically maps users to Israeli districts (Northern, Haifa, Central, Tel Aviv, Jerusalem, Southern, Judea & Samaria) based on their home city.
+* **Proximity Priority Algorithm:** Searches for potential matches in the exact same city first, before expanding the search to the entire district.
+* **Hobby Management:** Allows adding multiple hobbies with individual proficiency/interest ratings.
+* **Contact Retrieval:** Securely fetches the contact information (phone numbers) of matched users.
+* **Object-Oriented Design:** Clean architecture utilizing base classes (`Person`) and subclasses (`Male`, `Female`) with shared in-memory data structures.
 
-## Tech Stack
+## 🛠️ Tech Stack
+* **Language:** Python 3.x
+* **Core Concepts:** OOP (Inheritance, Encapsulation), Data Structures (Dictionaries, Lists, Tuples).
 
-* Python
-* FastAPI
-* MongoDB
-* Docker
-* REST API
+## 🚀 Getting Started
 
----
+### Prerequisites
+* Python 3.x installed on your local machine.
 
-## Features
-
-* RESTful API for managing application data
-* Health check endpoint for service monitoring
-* Database persistence using MongoDB
-* Containerized deployment using Docker
-
----
-
-## Architecture
-
-Client Application
-↓
-FastAPI Backend
-↓
-MongoDB Database
-
----
-
-## Project Structure
-
-```
-DoMyDudaProj
-│
-├── app
-│   ├── routes
-│   ├── models
-│   ├── services
-│   └── main.py
-│
-├── Dockerfile
-├── requirements.txt
-└── README.md
-```
-
----
-
-## Running the Project
-
-### Clone the repository
-
-```bash
-git clone https://github.com/RazAsraf7/DoMyDudaProj
-cd DoMyDudaProj
-```
-
-### Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### Run the application
-
-```bash
-uvicorn app.main:app --reload
-```
-
-### Run with Docker
-
-```bash
-docker build -t domyduda .
-docker run -p 8000:8000 domyduda
-```
-
----
-
-## Example Endpoint
-
-Health check:
-
-```
-GET /health
-```
-
-Response:
-
-```
-OK
-```
-
----
-
-## Purpose
-
-This project was created as part of a personal effort to deepen backend development knowledge and explore API design with Python.
+### Installation & Execution
+1. Clone the repository:
+   ```bash
+   git clone [https://github.com/RazAsraf7/DoMyDudaProj.git](https://github.com/RazAsraf7/DoMyDudaProj.git)
+   cd DoMyDudaProj
