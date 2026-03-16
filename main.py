@@ -127,10 +127,10 @@ class Female(Person):
 
 
 
-raz = Male('Raz', 'Asraf', 323838110, '0545973537', 'Rabinovich Yehoshua 55 Holon')
+raz = Male('Raz', 'Asraf', 123456789, '0522222222', 'Rabinovich Yehoshua 55 Holon')
 anatoly = Male('Anatoly', 'Kirilenko', 11252234, '0544442232', 'Bnei Brak 2 Ashdod')
-adi = Female('Adi', 'Hadad', 213485881, '0544530109', 'Uri Tzvi Grinberg 23 Holon')
-roee = Male('Roee', 'Hadad', 112354513, '0546382085', 'Uri Tzvi Grinberg 23 Holon')
+adi = Female('Adi', 'Hadad', 12345678, '053333333', 'Uri Tzvi Grinberg 203 Holon')
+roee = Male('Roee', 'Hadad', 112354513, '054444444', 'Uri Tzvi Grinberg 203 Holon')
 
 adi.add_hobby('Elint Skydiving Riding Skiing', '6 9 4 4')
 roee.add_hobby('Gaming Riding', '6 8')
